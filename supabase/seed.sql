@@ -1,0 +1,5 @@
+-- Intentionally empty.
+--
+-- Accounts are created through the Auth admin API (scripts/bootstrap-admins.mjs
+-- and the Members page), never with SQL, so no member data or password lives in
+-- git. Reference data (the 12 part-workflow steps) ships in the migrations.
