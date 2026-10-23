@@ -53,7 +53,8 @@
 						placeholder="e.g. BSc Electrical Engineering"
 					/>
 				</dd>
-				<dt><label for="pf-se">Semester</label></dt>
+				<!-- Time in the team, not the study semester: it drives the lifecycle. -->
+				<dt><label for="pf-se">Semester in the team</label></dt>
 				<dd>
 					<select
 						class="inp"
@@ -62,9 +63,8 @@
 						value={String(data.details?.semester ?? '')}
 					>
 						<option value="">Not set</option>
-						{#each [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] as n (n)}<option value={String(n)}
-								>{n}</option
-							>{/each}
+						{#each [1, 2, 3, 4, 5, 6] as n (n)}<option value={String(n)}>{n}</option>{/each}
+						<option value="7">7 or more</option>
 					</select>
 				</dd>
 				<dt><label for="pf-c">Preferred DM</label></dt>
@@ -77,39 +77,6 @@
 			</dl>
 			<div><button class="btn ghost" type="submit">Save details</button></div>
 		</form>
-	</section>
-
-	<section class="card stack">
-		<h3>Where you are in the lifecycle</h3>
-		{#if sem >= 1 && sem <= 6}
-			<p>
-				<span class="eyebrow">Semester {sem} · club member</span><br />{LIFECYCLE.member[sem - 1]}
-			</p>
-			{#if data.me.is_admin && LIFECYCLE.head[sem - 1]}
-				<p>
-					<span class="eyebrow">Semester {sem} · dept head track</span><br />{LIFECYCLE.head[
-						sem - 1
-					]}
-				</p>
-			{/if}
-		{:else if sem > 6}
-			<p class="muted">
-				You are past the six-semester lifecycle. Focus on handover and documentation.
-			</p>
-		{:else}
-			<p class="muted">Set your semester to see what your role looks like right now.</p>
-		{/if}
-		<div>
-			<span class="eyebrow">Onboarding {data.onboardingDone}/{ONBOARD_ITEMS.length}</span>
-			<div class="progress" style="margin-top:6px">
-				<i style="width:{(data.onboardingDone / ONBOARD_ITEMS.length) * 100}%"></i>
-			</div>
-		</div>
-		<div>
-			<a class="btn ghost sm" href="{resolve('/(app)/handbook')}?tab=onboarding"
-				>Open onboarding checklist</a
-			>
-		</div>
 	</section>
 
 	<form
@@ -157,3 +124,39 @@
 		<div><button class="btn" type="submit">Update password</button></div>
 	</form>
 </div>
+
+<section class="card stack">
+	<h3>Where you are in the lifecycle</h3>
+	{#if sem >= 1 && sem <= 6}
+		<p>
+			<span class="eyebrow">Semester {sem} in the team · club member</span><br />{LIFECYCLE.member[
+				sem - 1
+			]}
+		</p>
+		<!-- The head track is for juniors shadowing a dept head, so everyone sees it. -->
+		{#if LIFECYCLE.head[sem - 1]}
+			<p>
+				<span class="eyebrow">If you are on the dept head track</span><br />{LIFECYCLE.head[
+					sem - 1
+				]}
+			</p>
+		{/if}
+	{:else if sem > 6}
+		<p class="muted">
+			You are past the six-semester lifecycle. Focus on handover and documentation.
+		</p>
+	{:else}
+		<p class="muted">Set your semester in the team to see what your role looks like right now.</p>
+	{/if}
+	<div>
+		<span class="eyebrow">Onboarding {data.onboardingDone}/{ONBOARD_ITEMS.length}</span>
+		<div class="progress" style="margin-top:6px;max-width:420px">
+			<i style="width:{(data.onboardingDone / ONBOARD_ITEMS.length) * 100}%"></i>
+		</div>
+	</div>
+	<div>
+		<a class="btn ghost sm" href="{resolve('/(app)/handbook')}?tab=onboarding"
+			>Open onboarding checklist</a
+		>
+	</div>
+</section>

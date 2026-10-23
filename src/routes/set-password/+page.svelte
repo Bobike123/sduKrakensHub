@@ -19,53 +19,60 @@
 		</div>
 	</section>
 	<section class="auth-form">
-		<form
-			class="auth-card"
-			method="POST"
-			use:enhance={() => {
-				busy = true;
-				return async ({ update }) => {
-					await update({ reset: false });
-					busy = false;
-				};
-			}}
-		>
-			<div>
-				<div class="eyebrow">Welcome aboard, {data.firstName}</div>
-				<h2>Set your password</h2>
-			</div>
-			<p class="muted">You are using a temporary password. Choose your own before you continue.</p>
-			<div class="field">
-				<label class="lbl" for="fp-1">New password</label>
-				<input
-					class="inp"
-					id="fp-1"
-					name="p1"
-					type="password"
-					autocomplete="new-password"
-					bind:value={password}
-					required
-				/>
-				<PasswordMeter {password} />
-			</div>
-			<div class="field">
-				<label class="lbl" for="fp-2">Repeat new password</label>
-				<input
-					class="inp"
-					id="fp-2"
-					name="p2"
-					type="password"
-					autocomplete="new-password"
-					required
-				/>
-			</div>
-			<div class="err" role="alert">{form?.error ?? ''}</div>
-			<button class="btn" type="submit" disabled={busy}>
-				{busy ? 'Saving…' : 'Save and continue'}
-			</button>
-		</form>
-		<form method="POST" action="/logout" class="auth-card" style="margin-top:12px;padding-top:0">
-			<button class="btn ghost" type="submit">Back to log in</button>
-		</form>
+		<!-- One column: the set-password form, then a footer to leave. .auth-form is a row,
+		     so two sibling forms would sit side by side on a laptop. -->
+		<div class="auth-card">
+			<form
+				class="auth-card"
+				method="POST"
+				use:enhance={() => {
+					busy = true;
+					return async ({ update }) => {
+						await update({ reset: false });
+						busy = false;
+					};
+				}}
+			>
+				<div>
+					<div class="eyebrow">Welcome aboard, {data.firstName}</div>
+					<h2>Set your password</h2>
+				</div>
+				<p class="muted">
+					You are using a temporary password. Choose your own before you continue.
+				</p>
+				<div class="field">
+					<label class="lbl" for="fp-1">New password</label>
+					<input
+						class="inp"
+						id="fp-1"
+						name="p1"
+						type="password"
+						autocomplete="new-password"
+						bind:value={password}
+						required
+					/>
+					<PasswordMeter {password} />
+				</div>
+				<div class="field">
+					<label class="lbl" for="fp-2">Repeat new password</label>
+					<input
+						class="inp"
+						id="fp-2"
+						name="p2"
+						type="password"
+						autocomplete="new-password"
+						required
+					/>
+				</div>
+				<div class="err" role="alert">{form?.error ?? ''}</div>
+				<button class="btn" type="submit" disabled={busy}>
+					{busy ? 'Saving…' : 'Save and continue'}
+				</button>
+			</form>
+			<form method="POST" action="/logout" class="auth-foot">
+				<span class="small muted">Not you?</span>
+				<button class="btn ghost sm" type="submit">Back to log in</button>
+			</form>
+		</div>
 	</section>
 </div>

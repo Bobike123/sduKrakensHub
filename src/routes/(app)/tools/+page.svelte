@@ -67,7 +67,7 @@
 </div>
 
 <div class="tbl-wrap">
-	<table>
+	<table class="mid">
 		<thead><tr><th>Item</th><th>Owner</th><th>Status</th><th></th></tr></thead>
 		<tbody>
 			{#each shown as t (t.id)}

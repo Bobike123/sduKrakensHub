@@ -72,7 +72,15 @@
 	<div class="row">
 		<div class="field" style="flex:1;min-width:160px">
 			<label class="lbl" for="mt-d">Date</label>
-			<input class="inp" type="date" id="mt-d" name="meet_on" value={tomorrow} required />
+			<input
+				class="inp"
+				type="date"
+				id="mt-d"
+				name="meet_on"
+				value={tomorrow}
+				min={data.today}
+				required
+			/>
 		</div>
 		<div class="field" style="flex:1;min-width:130px">
 			<label class="lbl" for="mt-h">Time</label>
@@ -138,7 +146,7 @@
 							{r.topic}
 							{#if r.note}<div class="small muted">{r.note}</div>{/if}
 						</td>
-						<td class="mono">{fmtDate(r.meet_on)} {hhmm(r.meet_at)}</td>
+						<td class="mono small">{fmtDate(r.meet_on)} {hhmm(r.meet_at)}</td>
 						<td><DeptChip dept={r.dept as Dept} /></td>
 						<td>{r.author ? firstName(r.author.full_name) : '—'}</td>
 						<td>

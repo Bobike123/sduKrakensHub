@@ -2,7 +2,7 @@ import { fail } from '@sveltejs/kit';
 import * as v from 'valibot';
 import { DEPTS } from '#lib/config.js';
 import { todayISO } from '#lib/format.js';
-import { IdForm, parse, required } from '#lib/server/hub.js';
+import { IdForm, futureDate, parse, required } from '#lib/server/hub.js';
 import { dbFail, text } from '#lib/server/tasks.js';
 import type { Actions, PageServerLoad } from './$types';
 
@@ -24,7 +24,7 @@ export const load: PageServerLoad = async ({ locals: { supabase } }) => {
 
 const Request = v.object({
 	topic: required(120, 'Name the topic.'),
-	meet_on: v.pipe(v.string(), v.isoDate('Pick a date.')),
+	meet_on: futureDate('Pick a date from today on.'),
 	meet_at: v.pipe(v.string(), v.regex(/^([01]\d|2[0-3]):[0-5]\d(:[0-5]\d)?$/, 'Pick a time.')),
 	dept: v.picklist(DEPTS),
 	note: v.optional(text(200), '')

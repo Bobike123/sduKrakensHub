@@ -246,6 +246,11 @@ textarea.inp {
 	resize: vertical;
 	min-height: 84px;
 }
+/* one height for text fields and selects, so labels in a row line up */
+input.inp,
+select.inp {
+	height: 42px;
+}
 select.inp option {
 	background: var(--inp-bg);
 	color: var(--inp-tx);
@@ -300,6 +305,7 @@ select.dept-sel[data-dept='all'] {
 	padding: 9px 16px;
 	min-height: 40px;
 	font-weight: 600;
+	text-decoration: none;
 	cursor: pointer;
 	background: var(--accent);
 	color: var(--on-accent);
@@ -960,6 +966,10 @@ td {
 	border-bottom: 1px solid var(--line);
 	vertical-align: top;
 }
+/* rows with controls (selects, buttons) read better centred */
+table.mid td {
+	vertical-align: middle;
+}
 th {
 	font-family: var(--f-display);
 	text-transform: uppercase;
@@ -1008,6 +1018,9 @@ tr:last-child td {
 	gap: 4px;
 	border-bottom: 1px solid var(--line);
 	overflow-x: auto;
+	/* .tab's -1px margin would otherwise make it scroll vertically too */
+	overflow-y: hidden;
+	scrollbar-width: thin;
 }
 .tab {
 	padding: 10px 14px;
@@ -1228,7 +1241,8 @@ tr:last-child td {
 }
 
 /* ---------- events ---------- */
-.event {
+/* article.event, not .event: the announcement tag "event" is also `.tag.event`. */
+article.event {
 	display: grid;
 	grid-template-columns: 76px minmax(0, 1fr) auto;
 	gap: 16px;
@@ -1272,10 +1286,10 @@ tr:last-child td {
 	background: var(--date-past);
 	color: var(--tx);
 }
-.event.past {
+article.event.past {
 	opacity: 0.7;
 }
-.event h3 {
+article.event h3 {
 	font-size: 21px;
 }
 
@@ -1831,14 +1845,18 @@ tr:last-child td {
 	.idea-form {
 		grid-template-columns: 1fr;
 	}
-	.event {
+	article.event {
 		grid-template-columns: 64px minmax(0, 1fr);
 	}
-	.event > .ev-side {
+	article.event > .ev-side {
 		grid-column: 1/-1;
 	}
 	.msg {
 		max-width: 92%;
+	}
+	/* fixed-width fields (dates, selects) sit side by side on a laptop; stack them on a phone */
+	.row > .field[style*='width'] {
+		width: 100% !important;
 	}
 }
 @media (max-width: 480px) {

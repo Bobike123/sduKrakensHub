@@ -1,7 +1,7 @@
 import { fail } from '@sveltejs/kit';
 import * as v from 'valibot';
 import { todayISO } from '#lib/format.js';
-import { IdForm, myId, parse, required } from '#lib/server/hub.js';
+import { IdForm, futureDate, myId, parse, required } from '#lib/server/hub.js';
 import { dbFail, text } from '#lib/server/tasks.js';
 import type { Actions, PageServerLoad } from './$types';
 
@@ -28,9 +28,15 @@ export const load: PageServerLoad = async ({ locals: { supabase }, url }) => {
 };
 
 const Propose = v.object({
-	held_on: v.pipe(v.string(), v.isoDate('Pick a date.')),
+	held_on: futureDate('Pick a date from today on.'),
 	agenda: required(300, 'Write the agenda.')
 });
+
+// Only one live (not cancelled) assembly per date; the database enforces it.
+const dateTaken = (error: { code?: string; message: string }) =>
+	error.code === '23505'
+		? fail(400, { message: 'There is already an assembly on that date.' })
+		: dbFail(error);
 const SetStatus = v.object({
 	id: v.pipe(v.string(), v.uuid()),
 	status: v.picklist(['proposed', 'cancelled'])
@@ -45,7 +51,7 @@ export const actions: Actions = {
 		const { data, issue } = await parse(request, Propose);
 		if (issue) return issue;
 		const { error } = await supabase.from('assemblies').insert(data);
-		if (error) return dbFail(error);
+		if (error) return dateTaken(error);
 		return { message: 'Assembly proposed. The other department heads are notified.' };
 	},
 
@@ -81,7 +87,7 @@ export const actions: Actions = {
 			.update({ status: data.status })
 			.eq('id', data.id)
 			.select('id');
-		if (error) return dbFail(error);
+		if (error) return dateTaken(error);
 		if (!rows?.length) return fail(403, { message: 'Only admins can change an assembly.' });
 		return {
 			message:

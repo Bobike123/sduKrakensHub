@@ -79,10 +79,11 @@
 	<div class="section-head">
 		<h2>Lifecycle</h2>
 		{#if sem >= 1 && sem <= 6}
-			<span class="small muted">Your semester ({sem}) is highlighted</span>
+			<span class="small muted">Your semester in the team ({sem}) is highlighted</span>
 		{:else}
 			<span class="small muted"
-				>Set your semester in <a href={resolve('/(app)/profile')}>My profile</a> to highlight your column</span
+				>Set your semester in the team in <a href={resolve('/(app)/profile')}>My profile</a> to highlight
+				your column</span
 			>
 		{/if}
 	</div>

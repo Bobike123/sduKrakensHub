@@ -116,7 +116,12 @@
 			</div>
 			{#if m.details && (m.details.semester || m.details.studies || m.details.dm_channel)}
 				<div class="facts">
-					{#if m.details.semester}<span>Semester {m.details.semester}</span>{/if}
+					{#if m.details.semester}<span
+							>{m.details.semester > 6 ? '7+' : m.details.semester} semester{m.details.semester ===
+							1
+								? ''
+								: 's'} in the team</span
+						>{/if}
 					{#if m.details.studies}<span>{m.details.studies}</span>{/if}
 					{#if m.details.dm_channel}<span
 							>Prefers {DM_LABEL[m.details.dm_channel as DmChannel]}</span

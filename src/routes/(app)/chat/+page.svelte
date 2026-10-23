@@ -53,7 +53,8 @@
 		<div class="row">
 			<DeptChip dept={data.dept} />
 			<span class="small muted"
-				>{data.memberCount} members{data.me.is_admin && data.dept !== data.me.dept
+				>{data.memberCount} member{data.memberCount === 1 ? '' : 's'}{data.me.is_admin &&
+				data.dept !== data.me.dept
 					? ' · admin view'
 					: ''}</span
 			>

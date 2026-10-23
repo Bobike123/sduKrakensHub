@@ -92,7 +92,7 @@
 	<form class="card row" method="POST" action="?/propose" use:enhance style="align-items:flex-end">
 		<div class="field" style="width:170px">
 			<label class="lbl" for="ga-d">Date</label>
-			<input class="inp" type="date" id="ga-d" name="held_on" required />
+			<input class="inp" type="date" id="ga-d" name="held_on" min={data.today} required />
 		</div>
 		<div class="field grow">
 			<label class="lbl" for="ga-n">Agenda</label>

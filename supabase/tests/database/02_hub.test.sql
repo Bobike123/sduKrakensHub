@@ -200,11 +200,27 @@ select is((select status::text from public.assemblies where id = (select id from
 
 select tests.as_user(tests.id('ada'));
 update public.assemblies set status = 'proposed' where id = (select id from tests.ctx where k = 'ga');
-select is((select count(*) from public.assembly_approvals where assembly_id = (select id from tests.ctx where k = 'ga'))::int, 0,
-  're-proposing starts a new approval round');
+select is((select array_agg(user_id) from public.assembly_approvals where assembly_id = (select id from tests.ctx where k = 'ga')),
+  array[tests.id('ada')],
+  're-proposing starts a new round that counts only the proposer''s approval');
+select is((select status::text from public.assemblies where id = (select id from tests.ctx where k = 'ga')), 'proposed',
+  'and waits for the other heads again');
+select tests.as_user(tests.id('fay'));
+select is((select count(*) from public.notifications where kind = 'assembly_proposed')::int, 2,
+  'who are notified again');
+select tests.as_user(tests.id('ada'));
 select lives_ok($$ update public.assemblies set status = 'cancelled', summary = 'Exam season'
                    where id = (select id from tests.ctx where k = 'ga') $$,
   'an admin cancels an assembly and writes a note');
+
+-- one live assembly per date; a cancelled one frees the date
+select lives_ok($$ insert into public.assemblies (held_on, agenda) values ('2026-12-01', 'Second try') $$,
+  'a cancelled assembly frees its date');
+select throws_ok($$ insert into public.assemblies (held_on, agenda) values ('2026-12-01', 'Clash') $$,
+  '23505', null, 'two live assemblies cannot share a date');
+select throws_ok($$ update public.assemblies set status = 'proposed'
+                    where id = (select id from tests.ctx where k = 'ga') $$,
+  '23505', null, 'nor can a cancelled one come back onto a taken date');
 
 -- ---------------------------------------------------------------------------
 -- department chat
@@ -236,9 +252,15 @@ select throws_ok($$ insert into public.meeting_requests (dept, topic, meet_on, m
 select tests.as_user(tests.id('ada'));
 select is((select count(*) from public.notifications where kind = 'meeting_requested')::int, 1,
   'the department is notified');
+select tests.as_user(tests.id('fay'));
+select is((select count(*) from public.notifications where kind = 'meeting_requested')::int, 1,
+  'and every admin, also from other departments');
+select tests.as_user(tests.id('cy'));
+select is((select count(*) from public.notifications where kind = 'meeting_requested')::int, 0,
+  'but not members of other departments');
 select tests.as_user(tests.id('bob'));
 select is((select count(*) from public.notifications where kind = 'meeting_requested')::int, 0,
-  'but not the person who asked');
+  'nor the person who asked');
 select tests.as_user(tests.id('cy'));
 select is((select count(*) from public.meeting_requests)::int, 0,
   'other departments do not see the request');
@@ -318,6 +340,23 @@ update public.profiles set is_active = false where id = tests.id('eve');
 select tests.as_user(tests.id('eve'));
 select is((select count(*) from public.announcements)::int, 0, 'a deactivated member sees no announcements');
 select is((select count(*) from public.events)::int, 0, 'nor events');
+
+-- ---------------------------------------------------------------------------
+-- a change in who is an admin re-checks proposed assemblies
+-- ---------------------------------------------------------------------------
+select tests.as_user(tests.id('ada'));
+insert into public.assemblies (held_on, agenda) values ('2027-02-01', 'Waiting on Fay');
+select is((select status::text from public.assemblies where agenda = 'Waiting on Fay'), 'proposed',
+  'an assembly waits for every head');
+update public.profiles set is_active = false where id = tests.id('fay');
+select is((select status::text from public.assemblies where agenda = 'Waiting on Fay'), 'planned',
+  'when the last missing head leaves, it is planned');
+update public.profiles set is_admin = true where id = tests.id('bob');
+select is((select status::text from public.assemblies where agenda = 'Waiting on Fay'), 'planned',
+  'a new admin does not unplan an assembly that is already planned');
+insert into public.assemblies (held_on, agenda) values ('2027-03-01', 'Needs Bob too');
+select is((select status::text from public.assemblies where agenda = 'Needs Bob too'), 'proposed',
+  'but new proposals need the new admin too');
 
 select * from finish();
 rollback;

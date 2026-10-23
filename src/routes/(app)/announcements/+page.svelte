@@ -3,7 +3,7 @@
 	import Avatar from '#lib/components/Avatar.svelte';
 	import Icon from '#lib/components/Icon.svelte';
 	import Toast from '#lib/components/Toast.svelte';
-	import { daysUntil, fmtDate, fmtWhen, relDays } from '#lib/format.js';
+	import { daysUntil, fmtDate, fmtWhen } from '#lib/format.js';
 	import { ANNOUNCEMENT_LABEL, ANNOUNCEMENT_TAGS } from '#lib/hub.js';
 
 	let { data, form } = $props();
@@ -27,7 +27,7 @@
 	</div>
 	<div class="stat">
 		<span class="eyebrow">Monaco 2027</span><b>{Math.max(0, toRace)}</b>
-		<small>days · {relDays(toRace)} · {fmtDate(data.competition.date)}</small>
+		<small>days to the race · {fmtDate(data.competition.date)}</small>
 	</div>
 </div>
 

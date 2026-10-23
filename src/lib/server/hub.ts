@@ -1,10 +1,19 @@
 import { error, fail } from '@sveltejs/kit';
 import * as v from 'valibot';
+import { todayISO } from '#lib/format.js';
 import { formOf } from './tasks.js';
 
 /** A required, trimmed text field. */
 export const required = (max: number, message: string) =>
 	v.pipe(v.string(), v.trim(), v.minLength(1, message), v.maxLength(max, 'That is too long.'));
+
+/** An ISO date that is today or later (team timezone). */
+export const futureDate = (message: string) =>
+	v.pipe(
+		v.string(),
+		v.isoDate('Pick a date.'),
+		v.check((d) => d >= todayISO(), message)
+	);
 
 export const IdForm = v.object({ id: v.pipe(v.string(), v.uuid()) });
 
