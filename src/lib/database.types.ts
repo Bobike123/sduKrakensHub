@@ -23,12 +23,411 @@ export type Database = {
 	};
 	public: {
 		Tables: {
+			announcements: {
+				Row: {
+					body: string;
+					created_at: string;
+					created_by: string;
+					id: string;
+					tag: Database['public']['Enums']['announcement_tag'];
+					title: string;
+				};
+				ComputedFields: never;
+				Insert: {
+					body: string;
+					created_at?: string;
+					created_by?: string;
+					id?: string;
+					tag?: Database['public']['Enums']['announcement_tag'];
+					title: string;
+				};
+				Update: {
+					body?: string;
+					created_at?: string;
+					created_by?: string;
+					id?: string;
+					tag?: Database['public']['Enums']['announcement_tag'];
+					title?: string;
+				};
+				Relationships: [
+					{
+						foreignKeyName: 'announcements_created_by_fkey';
+						columns: ['created_by'];
+						isOneToOne: false;
+						referencedRelation: 'profiles';
+						referencedColumns: ['id'];
+					}
+				];
+			};
+			assemblies: {
+				Row: {
+					agenda: string;
+					created_at: string;
+					created_by: string;
+					held_on: string;
+					id: string;
+					status: Database['public']['Enums']['assembly_status'];
+					summary: string;
+					updated_at: string;
+				};
+				ComputedFields: never;
+				Insert: {
+					agenda: string;
+					created_at?: string;
+					created_by?: string;
+					held_on: string;
+					id?: string;
+					status?: Database['public']['Enums']['assembly_status'];
+					summary?: string;
+					updated_at?: string;
+				};
+				Update: {
+					agenda?: string;
+					created_at?: string;
+					created_by?: string;
+					held_on?: string;
+					id?: string;
+					status?: Database['public']['Enums']['assembly_status'];
+					summary?: string;
+					updated_at?: string;
+				};
+				Relationships: [
+					{
+						foreignKeyName: 'assemblies_created_by_fkey';
+						columns: ['created_by'];
+						isOneToOne: false;
+						referencedRelation: 'profiles';
+						referencedColumns: ['id'];
+					}
+				];
+			};
+			assembly_approvals: {
+				Row: {
+					approved_at: string;
+					assembly_id: string;
+					user_id: string;
+				};
+				ComputedFields: never;
+				Insert: {
+					approved_at?: string;
+					assembly_id: string;
+					user_id: string;
+				};
+				Update: {
+					approved_at?: string;
+					assembly_id?: string;
+					user_id?: string;
+				};
+				Relationships: [
+					{
+						foreignKeyName: 'assembly_approvals_assembly_id_fkey';
+						columns: ['assembly_id'];
+						isOneToOne: false;
+						referencedRelation: 'assemblies';
+						referencedColumns: ['id'];
+					},
+					{
+						foreignKeyName: 'assembly_approvals_user_id_fkey';
+						columns: ['user_id'];
+						isOneToOne: false;
+						referencedRelation: 'profiles';
+						referencedColumns: ['id'];
+					}
+				];
+			};
+			boat_components: {
+				Row: {
+					created_at: string;
+					detail: string;
+					id: string;
+					name: string;
+					position: number;
+					status: Database['public']['Enums']['component_status'];
+				};
+				ComputedFields: never;
+				Insert: {
+					created_at?: string;
+					detail?: string;
+					id?: string;
+					name: string;
+					position?: number;
+					status?: Database['public']['Enums']['component_status'];
+				};
+				Update: {
+					created_at?: string;
+					detail?: string;
+					id?: string;
+					name?: string;
+					position?: number;
+					status?: Database['public']['Enums']['component_status'];
+				};
+				Relationships: [];
+			};
+			chat_messages: {
+				Row: {
+					body: string;
+					created_at: string;
+					dept: Database['public']['Enums']['dept'];
+					id: string;
+					user_id: string;
+				};
+				ComputedFields: never;
+				Insert: {
+					body: string;
+					created_at?: string;
+					dept: Database['public']['Enums']['dept'];
+					id?: string;
+					user_id?: string;
+				};
+				Update: {
+					body?: string;
+					created_at?: string;
+					dept?: Database['public']['Enums']['dept'];
+					id?: string;
+					user_id?: string;
+				};
+				Relationships: [
+					{
+						foreignKeyName: 'chat_messages_user_id_fkey';
+						columns: ['user_id'];
+						isOneToOne: false;
+						referencedRelation: 'profiles';
+						referencedColumns: ['id'];
+					}
+				];
+			};
+			events: {
+				Row: {
+					created_at: string;
+					created_by: string;
+					description: string;
+					id: string;
+					place: string;
+					starts_on: string;
+					title: string;
+				};
+				ComputedFields: never;
+				Insert: {
+					created_at?: string;
+					created_by?: string;
+					description?: string;
+					id?: string;
+					place?: string;
+					starts_on: string;
+					title: string;
+				};
+				Update: {
+					created_at?: string;
+					created_by?: string;
+					description?: string;
+					id?: string;
+					place?: string;
+					starts_on?: string;
+					title?: string;
+				};
+				Relationships: [
+					{
+						foreignKeyName: 'events_created_by_fkey';
+						columns: ['created_by'];
+						isOneToOne: false;
+						referencedRelation: 'profiles';
+						referencedColumns: ['id'];
+					}
+				];
+			};
+			idea_votes: {
+				Row: {
+					idea_id: string;
+					user_id: string;
+				};
+				ComputedFields: never;
+				Insert: {
+					idea_id: string;
+					user_id: string;
+				};
+				Update: {
+					idea_id?: string;
+					user_id?: string;
+				};
+				Relationships: [
+					{
+						foreignKeyName: 'idea_votes_idea_id_fkey';
+						columns: ['idea_id'];
+						isOneToOne: false;
+						referencedRelation: 'ideas';
+						referencedColumns: ['id'];
+					},
+					{
+						foreignKeyName: 'idea_votes_user_id_fkey';
+						columns: ['user_id'];
+						isOneToOne: false;
+						referencedRelation: 'profiles';
+						referencedColumns: ['id'];
+					}
+				];
+			};
+			ideas: {
+				Row: {
+					body: string;
+					created_at: string;
+					created_by: string;
+					dept: Database['public']['Enums']['dept'] | null;
+					id: string;
+				};
+				ComputedFields: never;
+				Insert: {
+					body: string;
+					created_at?: string;
+					created_by?: string;
+					dept?: Database['public']['Enums']['dept'] | null;
+					id?: string;
+				};
+				Update: {
+					body?: string;
+					created_at?: string;
+					created_by?: string;
+					dept?: Database['public']['Enums']['dept'] | null;
+					id?: string;
+				};
+				Relationships: [
+					{
+						foreignKeyName: 'ideas_created_by_fkey';
+						columns: ['created_by'];
+						isOneToOne: false;
+						referencedRelation: 'profiles';
+						referencedColumns: ['id'];
+					}
+				];
+			};
+			meeting_requests: {
+				Row: {
+					created_at: string;
+					created_by: string;
+					dept: Database['public']['Enums']['dept'];
+					id: string;
+					meet_at: string;
+					meet_on: string;
+					note: string;
+					topic: string;
+				};
+				ComputedFields: never;
+				Insert: {
+					created_at?: string;
+					created_by?: string;
+					dept: Database['public']['Enums']['dept'];
+					id?: string;
+					meet_at: string;
+					meet_on: string;
+					note?: string;
+					topic: string;
+				};
+				Update: {
+					created_at?: string;
+					created_by?: string;
+					dept?: Database['public']['Enums']['dept'];
+					id?: string;
+					meet_at?: string;
+					meet_on?: string;
+					note?: string;
+					topic?: string;
+				};
+				Relationships: [
+					{
+						foreignKeyName: 'meeting_requests_created_by_fkey';
+						columns: ['created_by'];
+						isOneToOne: false;
+						referencedRelation: 'profiles';
+						referencedColumns: ['id'];
+					}
+				];
+			};
+			member_details: {
+				Row: {
+					dm_channel: Database['public']['Enums']['dm_channel'] | null;
+					semester: number | null;
+					studies: string;
+					updated_at: string;
+					user_id: string;
+				};
+				ComputedFields: never;
+				Insert: {
+					dm_channel?: Database['public']['Enums']['dm_channel'] | null;
+					semester?: number | null;
+					studies?: string;
+					updated_at?: string;
+					user_id: string;
+				};
+				Update: {
+					dm_channel?: Database['public']['Enums']['dm_channel'] | null;
+					semester?: number | null;
+					studies?: string;
+					updated_at?: string;
+					user_id?: string;
+				};
+				Relationships: [
+					{
+						foreignKeyName: 'member_details_user_id_fkey';
+						columns: ['user_id'];
+						isOneToOne: true;
+						referencedRelation: 'profiles';
+						referencedColumns: ['id'];
+					}
+				];
+			};
+			namebook: {
+				Row: {
+					contact: string;
+					context: string;
+					created_at: string;
+					created_by: string;
+					id: string;
+					known_by: string;
+					person: string;
+				};
+				ComputedFields: never;
+				Insert: {
+					contact?: string;
+					context: string;
+					created_at?: string;
+					created_by?: string;
+					id?: string;
+					known_by: string;
+					person: string;
+				};
+				Update: {
+					contact?: string;
+					context?: string;
+					created_at?: string;
+					created_by?: string;
+					id?: string;
+					known_by?: string;
+					person?: string;
+				};
+				Relationships: [
+					{
+						foreignKeyName: 'namebook_created_by_fkey';
+						columns: ['created_by'];
+						isOneToOne: false;
+						referencedRelation: 'profiles';
+						referencedColumns: ['id'];
+					},
+					{
+						foreignKeyName: 'namebook_known_by_fkey';
+						columns: ['known_by'];
+						isOneToOne: false;
+						referencedRelation: 'profiles';
+						referencedColumns: ['id'];
+					}
+				];
+			};
 			notifications: {
 				Row: {
 					actor_id: string | null;
+					assembly_id: string | null;
 					created_at: string;
 					id: string;
 					kind: Database['public']['Enums']['notification_kind'];
+					meeting_id: string | null;
 					part_id: string | null;
 					read_at: string | null;
 					task_id: string | null;
@@ -37,9 +436,11 @@ export type Database = {
 				ComputedFields: never;
 				Insert: {
 					actor_id?: string | null;
+					assembly_id?: string | null;
 					created_at?: string;
 					id?: string;
 					kind: Database['public']['Enums']['notification_kind'];
+					meeting_id?: string | null;
 					part_id?: string | null;
 					read_at?: string | null;
 					task_id?: string | null;
@@ -47,9 +448,11 @@ export type Database = {
 				};
 				Update: {
 					actor_id?: string | null;
+					assembly_id?: string | null;
 					created_at?: string;
 					id?: string;
 					kind?: Database['public']['Enums']['notification_kind'];
+					meeting_id?: string | null;
 					part_id?: string | null;
 					read_at?: string | null;
 					task_id?: string | null;
@@ -61,6 +464,20 @@ export type Database = {
 						columns: ['actor_id'];
 						isOneToOne: false;
 						referencedRelation: 'profiles';
+						referencedColumns: ['id'];
+					},
+					{
+						foreignKeyName: 'notifications_assembly_id_fkey';
+						columns: ['assembly_id'];
+						isOneToOne: false;
+						referencedRelation: 'assemblies';
+						referencedColumns: ['id'];
+					},
+					{
+						foreignKeyName: 'notifications_meeting_id_fkey';
+						columns: ['meeting_id'];
+						isOneToOne: false;
+						referencedRelation: 'meeting_requests';
 						referencedColumns: ['id'];
 					},
 					{
@@ -87,6 +504,72 @@ export type Database = {
 					{
 						foreignKeyName: 'notifications_user_id_fkey';
 						columns: ['user_id'];
+						isOneToOne: false;
+						referencedRelation: 'profiles';
+						referencedColumns: ['id'];
+					}
+				];
+			};
+			onboarding_progress: {
+				Row: {
+					done_at: string;
+					item: string;
+					user_id: string;
+				};
+				ComputedFields: never;
+				Insert: {
+					done_at?: string;
+					item: string;
+					user_id: string;
+				};
+				Update: {
+					done_at?: string;
+					item?: string;
+					user_id?: string;
+				};
+				Relationships: [
+					{
+						foreignKeyName: 'onboarding_progress_user_id_fkey';
+						columns: ['user_id'];
+						isOneToOne: false;
+						referencedRelation: 'profiles';
+						referencedColumns: ['id'];
+					}
+				];
+			};
+			openings: {
+				Row: {
+					created_at: string;
+					created_by: string;
+					description: string;
+					id: string;
+					looking_for: string;
+					status: Database['public']['Enums']['opening_status'];
+					title: string;
+				};
+				ComputedFields: never;
+				Insert: {
+					created_at?: string;
+					created_by?: string;
+					description?: string;
+					id?: string;
+					looking_for: string;
+					status?: Database['public']['Enums']['opening_status'];
+					title: string;
+				};
+				Update: {
+					created_at?: string;
+					created_by?: string;
+					description?: string;
+					id?: string;
+					looking_for?: string;
+					status?: Database['public']['Enums']['opening_status'];
+					title?: string;
+				};
+				Relationships: [
+					{
+						foreignKeyName: 'openings_created_by_fkey';
+						columns: ['created_by'];
 						isOneToOne: false;
 						referencedRelation: 'profiles';
 						referencedColumns: ['id'];
@@ -170,6 +653,113 @@ export type Database = {
 					{
 						foreignKeyName: 'parts_lead_id_fkey';
 						columns: ['lead_id'];
+						isOneToOne: false;
+						referencedRelation: 'profiles';
+						referencedColumns: ['id'];
+					}
+				];
+			};
+			poll_options: {
+				Row: {
+					id: string;
+					label: string;
+					poll_id: string;
+					position: number;
+				};
+				ComputedFields: never;
+				Insert: {
+					id?: string;
+					label: string;
+					poll_id: string;
+					position: number;
+				};
+				Update: {
+					id?: string;
+					label?: string;
+					poll_id?: string;
+					position?: number;
+				};
+				Relationships: [
+					{
+						foreignKeyName: 'poll_options_poll_id_fkey';
+						columns: ['poll_id'];
+						isOneToOne: false;
+						referencedRelation: 'polls';
+						referencedColumns: ['id'];
+					}
+				];
+			};
+			poll_votes: {
+				Row: {
+					option_id: string;
+					poll_id: string;
+					user_id: string;
+					voted_at: string;
+				};
+				ComputedFields: never;
+				Insert: {
+					option_id: string;
+					poll_id: string;
+					user_id: string;
+					voted_at?: string;
+				};
+				Update: {
+					option_id?: string;
+					poll_id?: string;
+					user_id?: string;
+					voted_at?: string;
+				};
+				Relationships: [
+					{
+						foreignKeyName: 'poll_votes_option_fkey';
+						columns: ['option_id', 'poll_id'];
+						isOneToOne: false;
+						referencedRelation: 'poll_options';
+						referencedColumns: ['id', 'poll_id'];
+					},
+					{
+						foreignKeyName: 'poll_votes_poll_id_fkey';
+						columns: ['poll_id'];
+						isOneToOne: false;
+						referencedRelation: 'polls';
+						referencedColumns: ['id'];
+					},
+					{
+						foreignKeyName: 'poll_votes_user_id_fkey';
+						columns: ['user_id'];
+						isOneToOne: false;
+						referencedRelation: 'profiles';
+						referencedColumns: ['id'];
+					}
+				];
+			};
+			polls: {
+				Row: {
+					created_at: string;
+					created_by: string;
+					id: string;
+					is_open: boolean;
+					question: string;
+				};
+				ComputedFields: never;
+				Insert: {
+					created_at?: string;
+					created_by?: string;
+					id?: string;
+					is_open?: boolean;
+					question: string;
+				};
+				Update: {
+					created_at?: string;
+					created_by?: string;
+					id?: string;
+					is_open?: boolean;
+					question?: string;
+				};
+				Relationships: [
+					{
+						foreignKeyName: 'polls_created_by_fkey';
+						columns: ['created_by'];
 						isOneToOne: false;
 						referencedRelation: 'profiles';
 						referencedColumns: ['id'];
@@ -335,17 +925,63 @@ export type Database = {
 					}
 				];
 			};
+			tools: {
+				Row: {
+					created_at: string;
+					created_by: string;
+					id: string;
+					item: string;
+					owner_id: string;
+					status: Database['public']['Enums']['tool_status'];
+					updated_at: string;
+				};
+				ComputedFields: never;
+				Insert: {
+					created_at?: string;
+					created_by?: string;
+					id?: string;
+					item: string;
+					owner_id: string;
+					status?: Database['public']['Enums']['tool_status'];
+					updated_at?: string;
+				};
+				Update: {
+					created_at?: string;
+					created_by?: string;
+					id?: string;
+					item?: string;
+					owner_id?: string;
+					status?: Database['public']['Enums']['tool_status'];
+					updated_at?: string;
+				};
+				Relationships: [
+					{
+						foreignKeyName: 'tools_created_by_fkey';
+						columns: ['created_by'];
+						isOneToOne: false;
+						referencedRelation: 'profiles';
+						referencedColumns: ['id'];
+					},
+					{
+						foreignKeyName: 'tools_owner_id_fkey';
+						columns: ['owner_id'];
+						isOneToOne: false;
+						referencedRelation: 'profiles';
+						referencedColumns: ['id'];
+					}
+				];
+			};
 		};
 		Views: {
 			contribution_log: {
 				Row: {
 					at: string | null;
-					dept: Database['public']['Enums']['dept'] | null;
-					id: string | null;
-					outcome: string | null;
+					dept: Database['public']['Enums']['dept'];
+					id: string;
+					outcome: string;
 					part_id: string | null;
-					status: Database['public']['Enums']['task_status'] | null;
-					task: string | null;
+					status: Database['public']['Enums']['task_status'];
+					task: string;
 					user_id: string | null;
 				};
 				ComputedFields: never;
@@ -399,13 +1035,26 @@ export type Database = {
 				};
 				Returns: string;
 			};
+			create_poll: { Args: { p_options: string[]; p_question: string }; Returns: string };
 		};
 		Enums: {
+			announcement_tag: 'info' | 'urgent' | 'event';
+			assembly_status: 'proposed' | 'planned' | 'cancelled';
+			component_status: 'confirmed' | 'planned';
 			dept: 'business' | 'mechanical' | 'electrical' | 'software';
-			notification_kind: 'task_assigned' | 'review_requested' | 'task_blocked' | 'part_assigned';
+			dm_channel: 'whatsapp' | 'teams' | 'email' | 'phone';
+			notification_kind:
+				| 'task_assigned'
+				| 'review_requested'
+				| 'task_blocked'
+				| 'part_assigned'
+				| 'meeting_requested'
+				| 'assembly_proposed';
+			opening_status: 'draft' | 'open' | 'closed';
 			step_owner: 'lead' | 'team';
 			task_phase: 'planning' | 'work' | 'feedback';
 			task_status: 'todo' | 'doing' | 'blocked' | 'review' | 'done' | 'failed';
+			tool_status: 'workshop' | 'borrowed' | 'home';
 		};
 		CompositeTypes: {
 			[_ in never]: never;
@@ -520,11 +1169,24 @@ export const Constants = {
 	},
 	public: {
 		Enums: {
+			announcement_tag: ['info', 'urgent', 'event'],
+			assembly_status: ['proposed', 'planned', 'cancelled'],
+			component_status: ['confirmed', 'planned'],
 			dept: ['business', 'mechanical', 'electrical', 'software'],
-			notification_kind: ['task_assigned', 'review_requested', 'task_blocked', 'part_assigned'],
+			dm_channel: ['whatsapp', 'teams', 'email', 'phone'],
+			notification_kind: [
+				'task_assigned',
+				'review_requested',
+				'task_blocked',
+				'part_assigned',
+				'meeting_requested',
+				'assembly_proposed'
+			],
+			opening_status: ['draft', 'open', 'closed'],
 			step_owner: ['lead', 'team'],
 			task_phase: ['planning', 'work', 'feedback'],
-			task_status: ['todo', 'doing', 'blocked', 'review', 'done', 'failed']
+			task_status: ['todo', 'doing', 'blocked', 'review', 'done', 'failed'],
+			tool_status: ['workshop', 'borrowed', 'home']
 		}
 	}
 } as const;

@@ -118,8 +118,9 @@ select is_empty(
      from pg_proc p join pg_namespace n on n.oid = p.pronamespace
      where n.nspname = 'public'
        and has_function_privilege('authenticated', p.oid, 'execute')
-       and p.oid <> 'public.create_part(text, public.dept, uuid, text, date, uuid[])'::regprocedure $$,
-  'create_part is the only API function members can call');
+       and p.oid not in ('public.create_part(text, public.dept, uuid, text, date, uuid[])'::regprocedure,
+                         'public.create_poll(text, text[])'::regprocedure) $$,
+  'create_part and create_poll are the only API functions members can call');
 
 -- ---------------------------------------------------------------------------
 -- profiles

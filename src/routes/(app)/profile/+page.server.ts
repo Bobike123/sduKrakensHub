@@ -1,8 +1,62 @@
 import { fail } from '@sveltejs/kit';
+import * as v from 'valibot';
 import { MIN_PASSWORD_LENGTH } from '#lib/config.js';
-import type { Actions } from './$types';
+import { DM_CHANNELS } from '#lib/hub.js';
+import { myId, parse } from '#lib/server/hub.js';
+import { dbFail, text } from '#lib/server/tasks.js';
+import type { Actions, PageServerLoad } from './$types';
+
+export const load: PageServerLoad = async ({ locals }) => {
+	const me = await myId(locals);
+	const [details, onboarding] = await Promise.all([
+		locals.supabase
+			.from('member_details')
+			.select('studies, semester, dm_channel')
+			.eq('user_id', me)
+			.maybeSingle(),
+		locals.supabase
+			.from('onboarding_progress')
+			.select('item', { count: 'exact', head: true })
+			.eq('user_id', me)
+	]);
+	return { details: details.data, onboardingDone: onboarding.count ?? 0 };
+};
+
+const blankToNull = (s: string) => (s === '' ? null : s);
+const Details = v.object({
+	studies: v.optional(text(80), ''),
+	semester: v.pipe(
+		v.optional(v.string(), ''),
+		v.transform(blankToNull),
+		v.nullable(
+			v.pipe(
+				v.string(),
+				v.transform(Number),
+				v.integer(),
+				v.minValue(1),
+				v.maxValue(12, 'Pick a semester from 1 to 12.')
+			)
+		)
+	),
+	dm_channel: v.pipe(
+		v.optional(v.string(), ''),
+		v.transform(blankToNull),
+		v.nullable(v.picklist(DM_CHANNELS))
+	)
+});
 
 export const actions: Actions = {
+	// `details: true` tells the page which form the message belongs to.
+	saveDetails: async ({ request, locals }) => {
+		const { data, issue } = await parse(request, Details);
+		if (issue) return fail(400, { message: 'Please check your details.', details: true });
+		const { error } = await locals.supabase
+			.from('member_details')
+			.upsert({ user_id: await myId(locals), ...data }, { onConflict: 'user_id' });
+		if (error) return dbFail(error);
+		return { message: 'Details saved', details: true };
+	},
+
 	changePassword: async ({ request, locals: { supabase, safeGetSession } }) => {
 		const { claims } = await safeGetSession();
 		if (!claims?.email) return fail(401, { message: 'Please log in again.' });

@@ -2,7 +2,8 @@
 	import { enhance } from '$app/forms';
 	import { resolve } from '$app/paths';
 	import Toast from '#lib/components/Toast.svelte';
-	import { fmtWhen } from '#lib/format.js';
+	import { DEPT_LABEL, type Dept } from '#lib/config.js';
+	import { fmtDate, fmtWhen } from '#lib/format.js';
 
 	let { data, form } = $props();
 
@@ -19,11 +20,21 @@
 				return `“${title}” is blocked`;
 			case 'part_assigned':
 				return `${who(n)} added you to the part “${n.part?.name ?? 'a part'}”`;
+			case 'meeting_requested':
+				return `${who(n)} asked ${n.meeting ? DEPT_LABEL[n.meeting.dept as Dept] : 'your department'} for a meeting: “${n.meeting?.topic ?? 'a meeting'}”${n.meeting ? ` on ${fmtDate(n.meeting.meet_on)}` : ''}`;
+			case 'assembly_proposed':
+				return `${who(n)} proposed a general assembly${n.assembly ? ` on ${fmtDate(n.assembly.held_on)}` : ''}. Your approval is needed.`;
 			default:
 				return 'Update';
 		}
 	};
 	const partOf = (n: Row) => n.part?.id ?? n.task?.part_id ?? null;
+	const linkOf = (n: Row) => {
+		if (n.kind === 'meeting_requested') return resolve('/(app)/meetings');
+		if (n.kind === 'assembly_proposed') return resolve('/(app)/assembly');
+		const part = partOf(n);
+		return part ? resolve('/(app)/parts/[id]', { id: part }) : resolve('/(app)');
+	};
 	const unread = $derived(data.notifications.filter((n) => !n.read_at).length);
 </script>
 
@@ -43,7 +54,7 @@
 		<a
 			class="card notif"
 			class:unread={!n.read_at}
-			href={partOf(n) ? resolve('/(app)/parts/[id]', { id: partOf(n) ?? '' }) : resolve('/(app)')}
+			href={linkOf(n)}
 			style="text-decoration:none;color:inherit"
 		>
 			<div class="row" style="justify-content:space-between">
@@ -54,7 +65,8 @@
 		</a>
 	{:else}
 		<div class="empty">
-			No notifications yet. You hear about new assignments, review requests and blocked tasks here.
+			No notifications yet. You hear about new assignments, review requests, blocked tasks and
+			meeting requests here.
 		</div>
 	{/each}
 </div>

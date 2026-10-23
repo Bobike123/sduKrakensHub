@@ -4,10 +4,13 @@
 	import DeptChip from '#lib/components/DeptChip.svelte';
 	import PasswordMeter from '#lib/components/PasswordMeter.svelte';
 	import Toast from '#lib/components/Toast.svelte';
+	import { resolve } from '$app/paths';
 	import type { Dept } from '#lib/config.js';
+	import { DM_CHANNELS, DM_LABEL, LIFECYCLE, ONBOARD_ITEMS } from '#lib/hub.js';
 
 	let { data, form } = $props();
 	let password = $state('');
+	const sem = $derived(data.details?.semester ?? 0);
 </script>
 
 <Toast result={form} />
@@ -30,6 +33,83 @@
 			<dd><DeptChip dept={data.me.dept as Dept} /></dd>
 		</dl>
 		<p class="small muted">An admin keeps your name, department and role up to date.</p>
+		<form
+			class="stack"
+			method="POST"
+			action="?/saveDetails"
+			use:enhance={() =>
+				async ({ update }) =>
+					update({ reset: false })}
+		>
+			<dl class="kv">
+				<dt><label for="pf-st">Studies</label></dt>
+				<dd>
+					<input
+						class="inp"
+						id="pf-st"
+						name="studies"
+						maxlength="80"
+						value={data.details?.studies ?? ''}
+						placeholder="e.g. BSc Electrical Engineering"
+					/>
+				</dd>
+				<dt><label for="pf-se">Semester</label></dt>
+				<dd>
+					<select
+						class="inp"
+						id="pf-se"
+						name="semester"
+						value={String(data.details?.semester ?? '')}
+					>
+						<option value="">Not set</option>
+						{#each [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] as n (n)}<option value={String(n)}
+								>{n}</option
+							>{/each}
+					</select>
+				</dd>
+				<dt><label for="pf-c">Preferred DM</label></dt>
+				<dd>
+					<select class="inp" id="pf-c" name="dm_channel" value={data.details?.dm_channel ?? ''}>
+						<option value="">Not set</option>
+						{#each DM_CHANNELS as c (c)}<option value={c}>{DM_LABEL[c]}</option>{/each}
+					</select>
+				</dd>
+			</dl>
+			<div><button class="btn ghost" type="submit">Save details</button></div>
+		</form>
+	</section>
+
+	<section class="card stack">
+		<h3>Where you are in the lifecycle</h3>
+		{#if sem >= 1 && sem <= 6}
+			<p>
+				<span class="eyebrow">Semester {sem} · club member</span><br />{LIFECYCLE.member[sem - 1]}
+			</p>
+			{#if data.me.is_admin && LIFECYCLE.head[sem - 1]}
+				<p>
+					<span class="eyebrow">Semester {sem} · dept head track</span><br />{LIFECYCLE.head[
+						sem - 1
+					]}
+				</p>
+			{/if}
+		{:else if sem > 6}
+			<p class="muted">
+				You are past the six-semester lifecycle. Focus on handover and documentation.
+			</p>
+		{:else}
+			<p class="muted">Set your semester to see what your role looks like right now.</p>
+		{/if}
+		<div>
+			<span class="eyebrow">Onboarding {data.onboardingDone}/{ONBOARD_ITEMS.length}</span>
+			<div class="progress" style="margin-top:6px">
+				<i style="width:{(data.onboardingDone / ONBOARD_ITEMS.length) * 100}%"></i>
+			</div>
+		</div>
+		<div>
+			<a class="btn ghost sm" href="{resolve('/(app)/handbook')}?tab=onboarding"
+				>Open onboarding checklist</a
+			>
+		</div>
 	</section>
 
 	<form
@@ -72,7 +152,7 @@
 			<input class="inp" id="cp-2" name="p2" type="password" autocomplete="new-password" required />
 		</div>
 		<div class="err" role="alert">
-			{form?.message && form.message !== 'Password updated' ? form.message : ''}
+			{form?.message && form.message !== 'Password updated' && !form.details ? form.message : ''}
 		</div>
 		<div><button class="btn" type="submit">Update password</button></div>
 	</form>

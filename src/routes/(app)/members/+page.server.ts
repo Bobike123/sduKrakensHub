@@ -8,7 +8,10 @@ import type { Actions, PageServerLoad, RequestEvent } from './$types';
 export const load: PageServerLoad = async ({ locals: { supabase } }) => {
 	const { data } = await supabase
 		.from('profiles')
-		.select('id, username, full_name, dept, role_title, is_admin, is_active, must_change_password')
+		.select(
+			`id, username, full_name, dept, role_title, is_admin, is_active, must_change_password,
+			details:member_details(studies, semester, dm_channel)`
+		)
 		.order('is_active', { ascending: false })
 		.order('dept')
 		.order('full_name');

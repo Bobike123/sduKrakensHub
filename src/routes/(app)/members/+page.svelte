@@ -5,6 +5,7 @@
 	import Icon from '#lib/components/Icon.svelte';
 	import Toast from '#lib/components/Toast.svelte';
 	import { DEPTS, DEPT_LABEL, type Dept } from '#lib/config.js';
+	import { DM_LABEL, type DmChannel } from '#lib/hub.js';
 
 	let { data, form } = $props();
 	let filter = $state<'all' | Dept>('all');
@@ -113,6 +114,15 @@
 				{#if !m.is_active}<span class="tag neutral">Deactivated</span>
 				{:else if m.must_change_password}<span class="tag warn">Temporary password</span>{/if}
 			</div>
+			{#if m.details && (m.details.semester || m.details.studies || m.details.dm_channel)}
+				<div class="facts">
+					{#if m.details.semester}<span>Semester {m.details.semester}</span>{/if}
+					{#if m.details.studies}<span>{m.details.studies}</span>{/if}
+					{#if m.details.dm_channel}<span
+							>Prefers {DM_LABEL[m.details.dm_channel as DmChannel]}</span
+						>{/if}
+				</div>
+			{/if}
 
 			{#if data.me.is_admin}
 				<details>

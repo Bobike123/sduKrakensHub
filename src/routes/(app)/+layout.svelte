@@ -6,43 +6,94 @@
 	import Avatar from '#lib/components/Avatar.svelte';
 	import Icon from '#lib/components/Icon.svelte';
 	import Logo from '#lib/components/Logo.svelte';
+	import { DEPT_LABEL, type Dept } from '#lib/config.js';
 
 	let { data, children } = $props();
 	let menuOpen = $state(false);
 	let dark = $state(true);
 
-	const nav = [
-		{
-			head: 'Work',
-			items: [
-				{ href: '/', label: 'My tasks', icon: 'check' },
-				{ href: '/board', label: 'Board', icon: 'workflow' },
-				{ href: '/parts', label: 'Parts', icon: 'boat' }
-			]
-		},
-		{
-			head: 'Team',
-			items: [
-				{ href: '/log', label: 'Contribution log', icon: 'log' },
-				{ href: '/members', label: 'Members', icon: 'users' },
-				{ href: '/profile', label: 'My profile', icon: 'user' }
-			]
-		}
-	] as const;
 	// resolve() takes route ids, which include the (app) group.
 	const routeOf = {
 		'/': '/(app)',
 		'/board': '/(app)/board',
 		'/parts': '/(app)/parts',
+		'/boat': '/(app)/boat',
+		'/tools': '/(app)/tools',
+		'/announcements': '/(app)/announcements',
+		'/ideas': '/(app)/ideas',
+		'/polls': '/(app)/polls',
+		'/events': '/(app)/events',
+		'/assembly': '/(app)/assembly',
+		'/chat': '/(app)/chat',
+		'/meetings': '/(app)/meetings',
+		'/handbook': '/(app)/handbook',
+		'/namebook': '/(app)/namebook',
 		'/log': '/(app)/log',
 		'/members': '/(app)/members',
 		'/profile': '/(app)/profile'
 	} as const;
+	type Item = { href: keyof typeof routeOf; label: string; icon: string };
+
+	const nav: { head: string; items: Item[] }[] = $derived([
+		{
+			head: 'Work',
+			items: [
+				{ href: '/', label: 'My tasks', icon: 'check' },
+				{ href: '/board', label: 'Board', icon: 'workflow' },
+				{ href: '/parts', label: 'Parts', icon: 'cube' },
+				{ href: '/boat', label: 'Boat tracker', icon: 'boat' },
+				{ href: '/tools', label: 'Tool list', icon: 'toolbox' }
+			]
+		},
+		{
+			head: 'Hub',
+			items: [
+				{ href: '/announcements', label: 'Announcements', icon: 'megaphone' },
+				{ href: '/ideas', label: 'Idea bank', icon: 'bulb' },
+				{ href: '/polls', label: 'Polls', icon: 'poll' },
+				{ href: '/events', label: 'Events', icon: 'calendar' },
+				{ href: '/assembly', label: 'General assembly', icon: 'assembly' }
+			]
+		},
+		{
+			head: 'Department',
+			items: [
+				{ href: '/chat', label: `${DEPT_LABEL[data.me.dept as Dept]} chat`, icon: 'chat' },
+				{ href: '/meetings', label: 'Request meeting', icon: 'clock' }
+			]
+		},
+		{
+			head: 'Organisation',
+			items: [
+				{ href: '/handbook', label: 'Handbook', icon: 'book' },
+				{ href: '/namebook', label: 'Namebook', icon: 'contacts' },
+				{ href: '/log', label: 'Contribution log', icon: 'log' }
+			]
+		},
+		{
+			head: 'Team',
+			items: [
+				{ href: '/members', label: 'Members', icon: 'users' },
+				{ href: '/profile', label: 'My profile', icon: 'user' }
+			]
+		}
+	]);
 
 	const titles: Record<string, string> = {
 		'/': 'My tasks',
 		'/board': 'Board',
 		'/parts': 'Parts',
+		'/boat': 'Boat tracker',
+		'/tools': 'Tool list',
+		'/announcements': 'Announcements',
+		'/ideas': 'Idea bank',
+		'/polls': 'Polls',
+		'/events': 'Events',
+		'/assembly': 'General assembly',
+		'/chat': 'Department chat',
+		'/meetings': 'Request meeting',
+		'/handbook': 'Handbook',
+		'/namebook': 'Namebook',
 		'/log': 'Contribution log',
 		'/members': 'Members',
 		'/profile': 'My profile',

@@ -7,6 +7,8 @@ export const load: PageServerLoad = async ({ locals: { supabase } }) => {
 			`id, kind, created_at, read_at,
 			task:tasks(id, title, part_id),
 			part:parts(id, name),
+			meeting:meeting_requests(id, topic, meet_on, dept),
+			assembly:assemblies(id, held_on),
 			actor:profiles!notifications_actor_id_fkey(full_name)`
 		)
 		.order('created_at', { ascending: false })

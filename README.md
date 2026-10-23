@@ -12,8 +12,19 @@ Task organizer for SDU Krakens (Monaco Energy Boat Challenge 2027): who does whi
 | **Board** | A column per status for a department (or everyone). Add and move tasks. |
 | **Parts** | A part of the boat with a lead, a team of at most two, a deadline and its 12 standard workflow steps as real, assignable tasks. |
 | **Contribution log** | Built from the tasks people pick up. Finishing a task with an outcome note writes the entry, so nothing is typed twice. |
-| **Members** | The directory. Admins add members, reset passwords, deactivate and promote. |
-| **Notifications** | Assigned to you, review requested, blocked, added to a part. In-app only. |
+| **Boat tracker** | What is confirmed on the boat. Admins add components and mark them confirmed. |
+| **Tool list** | Tools members own or can share, and where they are. You manage your own; admins any. |
+| **Announcements** | Admin posts to the whole team, with countdowns to the next event and Monaco. |
+| **Idea bank** | Anyone posts an idea for a department or the whole team; everyone upvotes. |
+| **Polls** | Admins create polls; one vote per member, changeable while the poll is open. |
+| **Events** | The team calendar of shows, deadlines and the race. Admins add events. |
+| **General assembly** | An admin proposes one; it is planned once every department head (active admin) approves. Admins add the summary. |
+| **Department chat** | A chat per department. Admins can read and write in every department. |
+| **Request meeting** | Ask your department for a meeting; everyone in it is notified, and you get WhatsApp and email texts to paste. |
+| **Handbook** | Roles and the semester lifecycle, hiring with open positions, a personal onboarding checklist, workshop rules, which channel to use for what. |
+| **Namebook** | Outside people the team knows, and who knows them. |
+| **Members** | The directory. Admins add members, reset passwords, deactivate and promote. Members fill in studies, semester and preferred DM channel in My profile. |
+| **Notifications** | Assigned to you, review requested, blocked, added to a part, meeting requested, assembly needs your approval. In-app only. |
 
 Statuses: `todo → doing → blocked → review → done / failed`. A blocked task needs a reason. When a task has a reviewer, only the reviewer, the part lead or an admin can mark it done.
 
@@ -100,7 +111,9 @@ src/routes/set-password        forced first-login password change
 src/routes/(app)/…             the pages above, behind the login guard
 src/lib/server/tasks.ts        form actions shared by every page that shows tasks
 src/lib/server/admin.ts        service-role helpers (members)
-supabase/migrations            schema, security (RLS, grants), logic (triggers, create_part)
+src/lib/server/hub.ts          form parsing helpers for the hub pages
+src/lib/hub.ts                 labels and fixed handbook content for the hub pages
+supabase/migrations            organizer and hub: schema, security (RLS, grants), logic (triggers, create_part, create_poll)
 supabase/tests/database        pgTAP tests
 scripts/create-member.mjs      create an account without email
 prototype/                     the old v1 front-end prototype; delete once nothing is missed
