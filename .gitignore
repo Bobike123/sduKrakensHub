@@ -25,3 +25,5 @@ vite.config.ts.timestamp-*
 # Local generated output
 /coverage
 /prototype/
+# second copy of the v1 prototype; its data.js holds plain-text passwords
+/clone/
