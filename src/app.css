@@ -37,6 +37,8 @@
 	--mech-soft: rgba(60, 207, 142, 0.13);
 	--elec: #5aa2ff;
 	--elec-soft: rgba(90, 162, 255, 0.14);
+	--soft: #e0a526;
+	--soft-soft: rgba(224, 165, 38, 0.15);
 	--all: #b28cff;
 	--all-soft: rgba(178, 140, 255, 0.15);
 	--ok: #3ccf8e;
@@ -88,6 +90,8 @@
 		--mech-soft: rgba(23, 131, 79, 0.1);
 		--elec: #1f63cc;
 		--elec-soft: rgba(31, 99, 204, 0.09);
+		--soft: #a86b00;
+		--soft-soft: rgba(168, 107, 0, 0.1);
 		--all: #6d42c4;
 		--all-soft: rgba(109, 66, 196, 0.1);
 		--ok: #17834f;
@@ -132,6 +136,8 @@
 	--mech-soft: rgba(23, 131, 79, 0.1);
 	--elec: #1f63cc;
 	--elec-soft: rgba(31, 99, 204, 0.09);
+	--soft: #a86b00;
+	--soft-soft: rgba(168, 107, 0, 0.1);
 	--all: #6d42c4;
 	--all-soft: rgba(109, 66, 196, 0.1);
 	--ok: #17834f;
@@ -270,6 +276,10 @@ select.dept-sel[data-dept='mechanical'] {
 	border-color: var(--mech);
 	background: linear-gradient(var(--mech-soft), var(--mech-soft)), var(--inp-bg);
 }
+select.dept-sel[data-dept='software'] {
+	border-color: var(--soft);
+	background: linear-gradient(var(--soft-soft), var(--soft-soft)), var(--inp-bg);
+}
 select.dept-sel[data-dept='electrical'] {
 	border-color: var(--elec);
 	background: linear-gradient(var(--elec-soft), var(--elec-soft)), var(--inp-bg);
@@ -407,6 +417,10 @@ select.dept-sel[data-dept='all'] {
 .d-mechanical {
 	--dc: var(--mech);
 	--dcs: var(--mech-soft);
+}
+.d-software {
+	--dc: var(--soft);
+	--dcs: var(--soft-soft);
 }
 .d-electrical {
 	--dc: var(--elec);
@@ -982,6 +996,9 @@ tr:last-child td {
 }
 .av.mechanical {
 	background: #17834f;
+}
+.av.software {
+	background: #a86b00;
 }
 .av.electrical {
 	background: #1f63cc;

@@ -401,7 +401,7 @@ export type Database = {
 			};
 		};
 		Enums: {
-			dept: 'business' | 'mechanical' | 'electrical';
+			dept: 'business' | 'mechanical' | 'electrical' | 'software';
 			notification_kind: 'task_assigned' | 'review_requested' | 'task_blocked' | 'part_assigned';
 			step_owner: 'lead' | 'team';
 			task_phase: 'planning' | 'work' | 'feedback';
@@ -520,7 +520,7 @@ export const Constants = {
 	},
 	public: {
 		Enums: {
-			dept: ['business', 'mechanical', 'electrical'],
+			dept: ['business', 'mechanical', 'electrical', 'software'],
 			notification_kind: ['task_assigned', 'review_requested', 'task_blocked', 'part_assigned'],
 			step_owner: ['lead', 'team'],
 			task_phase: ['planning', 'work', 'feedback'],

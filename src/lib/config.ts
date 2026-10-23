@@ -22,12 +22,13 @@ export const loginIdToEmail = (input: string): string => {
 	return id.includes('@') ? id : usernameToEmail(id);
 };
 
-export const DEPTS = ['business', 'mechanical', 'electrical'] as const;
+export const DEPTS = ['business', 'mechanical', 'electrical', 'software'] as const;
 export type Dept = (typeof DEPTS)[number];
 export const DEPT_LABEL: Record<Dept, string> = {
 	business: 'Business',
 	mechanical: 'Mechanical',
-	electrical: 'Electrical'
+	electrical: 'Electrical',
+	software: 'Software'
 };
 
 export const STATUSES = ['todo', 'doing', 'blocked', 'review', 'done', 'failed'] as const;
